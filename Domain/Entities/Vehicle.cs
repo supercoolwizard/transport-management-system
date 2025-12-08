@@ -2,7 +2,7 @@
 
 namespace transport_management_system.Domain.Entities;
 
-class Vehicle 
+public class Vehicle 
 {
     public int VehicleId { get; }
     public string Name { get; }

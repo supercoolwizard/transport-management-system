@@ -7,14 +7,14 @@ class Program
 {
     static void Main(string[] args)
     {
-        string driverCsvPath = "Infrastructure/Files/drivers.csv";        
-        var driverRepo = new DriverRepository(driverCsvPath);
+        string driverCsvPath = "Infrastructure/Files/vehicles.csv";        
+        var vehiclesRepo = new DriverRepository(driverCsvPath);
 
-        var allDrivers = driverRepo.GetAll();
-        Console.WriteLine("All drivers:");
-        foreach (var driver in allDrivers)
+        var allVehicles = vehiclesRepo.GetAll();
+        Console.WriteLine("All vehicles:");
+        foreach (var vehicle in allVehicles)
         {
-            Console.WriteLine($"{driver.DriverId} - {driver.Name} - {driver.SalaryPerKm}");
+            Console.WriteLine($"{vehicle.DriverId} - {vehicle.Name} - {vehicle.SalaryPerKm}");
         }
     }
 }
