@@ -1,4 +1,60 @@
-transport_management_system/bin/
-transport_management_system/obj/
-bin
-obj
+# Build results
+bin/
+obj/
+out/
+Debug/
+Release/
+x64/
+x86/
+[Aa]rtifacts/
+[Bb]uild/
+
+# Rider / JetBrains IDE
+.idea/
+*.sln.iml
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tlog
+*.tmp
+*.temp
+*.cache
+*.bak
+
+# NuGet packages
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+# If you use package restore, uncomment the next line:
+# !packages/build/
+
+# Test results
+TestResult*/
+*.TestResult.xml
+*.coverage
+*.coveragexml
+
+# ASP.NET specific
+appsettings.Development.json
+wwwroot/lib/
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user

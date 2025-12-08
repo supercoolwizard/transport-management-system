@@ -7,8 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        string driverCsvPath = "Infrastructure/Files/drivers.csv";
-
+        string driverCsvPath = "Infrastructure/Files/drivers.csv";        
         var driverRepo = new DriverRepository(driverCsvPath);
 
         var allDrivers = driverRepo.GetAll();
