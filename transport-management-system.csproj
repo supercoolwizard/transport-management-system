@@ -13,4 +13,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Infrastructure/Files/vehicles.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

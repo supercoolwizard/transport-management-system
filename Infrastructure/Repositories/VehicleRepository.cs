@@ -1,14 +1,13 @@
-using Domain.Interfaces;
 using transport_management_system.Domain.Entities;
-using transport_management_system.Domain.Interfaces;
+using Domain.Interfaces;
 
 namespace Infrastructure.Repositories;
 
-public class DriverRepository : IVehicleRepository
+public class VehicleRepository : IVehicleRepository
 {
     private readonly string _filePath;
 
-    public DriverRepository(string filePath)
+    public VehicleRepository(string filePath)
     {
         _filePath = filePath;
     }
@@ -28,5 +27,12 @@ public class DriverRepository : IVehicleRepository
     public Vehicle? GetById(int id)
     {
         return GetAll().FirstOrDefault(d => d.VehicleId == id);
+    }
+
+    public decimal? GetCostPerKmById(int id)
+    {
+        Vehicle? vehicle = GetById(id);
+
+        return vehicle?.CostPerKm; 
     }
 }

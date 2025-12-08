@@ -1,7 +1,8 @@
 using transport_management_system.Domain.Entities;
-using transport_management_system.Domain.Interfaces;
+using transport_management_system.Domain;
+using Domain.Interfaces;
 
-namespace transport_management_system.Infrastructure.Repositories;
+namespace Infrastructure.Repositories;
 
 public class DriverRepository : IDriverRepository
 {
@@ -27,5 +28,12 @@ public class DriverRepository : IDriverRepository
     public Driver? GetById(int id)
     {
         return GetAll().FirstOrDefault(d => d.DriverId == id);
+    }
+
+    public decimal? GetSalaryPerKmById(int id)
+    {
+        Driver? driver = GetById(id);
+
+        return driver?.SalaryPerKm;
     }
 }
