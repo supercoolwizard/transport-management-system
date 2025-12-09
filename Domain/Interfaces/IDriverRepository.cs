@@ -7,5 +7,6 @@ public interface IDriverRepository
     IEnumerable<Driver> GetAll(); // returns all drivers
     Driver? GetById(int id); // returns one driver by ID
     decimal? GetSalaryPerKmById(int id);
+    void ChangeAvailabilityToZeroById(int id);
 }
 

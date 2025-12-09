@@ -1,6 +1,7 @@
 using transport_management_system.Domain.Entities;
 using transport_management_system.Domain;
 using Domain.Interfaces;
+using transport_management_system.Domain.Exceptions;
 
 namespace Infrastructure.Repositories;
 
@@ -13,7 +14,7 @@ public class DriverRepository : IDriverRepository
         _filePath = filePath;
     }
 
-    public  IEnumerable<Driver> GetAll()
+    public IEnumerable<Driver> GetAll()
     {
         return File.ReadAllLines(_filePath)
             .Skip(1)  // header
@@ -21,7 +22,8 @@ public class DriverRepository : IDriverRepository
             .Select(cols => new Driver(
                 int.Parse(cols[0]),
                 cols[1],
-                decimal.Parse(cols[2])
+                decimal.Parse(cols[2]),
+                int.Parse(cols[3])
             ));
     }
 
@@ -35,5 +37,24 @@ public class DriverRepository : IDriverRepository
         Driver? driver = GetById(id);
 
         return driver?.SalaryPerKm;
+    }
+
+    public void ChangeAvailabilityToZeroById(int id)
+    {
+        var lines = File.ReadAllLines(_filePath).ToList();
+
+        for (int i = 1; i < lines.Count; i++)
+        {
+            var cols = lines[i].Split(',');
+            if (int.Parse(cols[0]) == id)
+            {
+                cols[3] = "0";
+                lines[i] = string.Join(",", cols);
+
+                File.WriteAllLines(_filePath, lines);
+                return;
+            }
+        }
+        throw new DriverUnavailableException(id, $"Driver with ID {id} was not found for update.");
     }
 }

@@ -17,9 +17,12 @@ class Program
         IVehicleRepository vehiclesRepository = new VehicleRepository(vehiclesCsvPath);
         
         var requestService = new RequestService(vehiclesRepository, driversRepository);
-        var processedRequest = requestService.ProcessRequest(1, 1, 12);
+       
+        var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);
+        var processedRequest_2 = requestService.ProcessRequest(1, 1, 22);
 
-        Console.WriteLine($"The total cost of your transportation will be {processedRequest.TotalCost}");
+        Console.WriteLine($"The total cost of your transportation will be {processedRequest_1.TotalCost}");
+        Console.WriteLine($"The total cost of your transportation will be {processedRequest_2.TotalCost}");
         
 
         // var allDrivers = driversRepo.GetAll();
