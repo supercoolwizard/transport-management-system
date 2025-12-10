@@ -2,6 +2,7 @@ using Domain.Entities;
 using Infrastructure;
 using transport_management_system.Domain.Entities;
 using transport_management_system.Domain;
+using transport_management_system.Domain.Exceptions;
 using Domain.Interfaces;
 
 namespace Applications.Services;
@@ -19,6 +20,14 @@ public class RequestService
 
     public Request ProcessRequest(int vehicleId, int driverId, decimal distance) 
     {
+        var driver = _driverRepository.GetById(driverId);
+
+        if (driver == null)
+        {
+            throw new DriverNotFoundExcpetion(driverId);
+        }
+        driver.CheckAvailability();
+
         var request = new Request(vehicleId, driverId, distance);
 
         decimal? costPerKm = _vehicleRepository.GetCostPerKmById(vehicleId);
@@ -29,14 +38,10 @@ public class RequestService
         if (costPerKm.HasValue && salaryPerKm.HasValue)
         {
             totalCost = request.Distance * costPerKm.Value + request.Distance * salaryPerKm.Value;
-            Console.WriteLine($"Total cost: {totalCost:C}");
-        }
-        else
-        {
-            Console.WriteLine($"Vehicle, or driver not found");
         }
 
         request.SetTotalCost(totalCost);
+        _driverRepository.ChangeAvailabilityToZeroById(driverId);
 
         return request;
     }

@@ -3,6 +3,7 @@ using Domain.Entities;
 using transport_management_system.Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Repositories;
+using transport_management_system.Domain.Exceptions;
 
 namespace transport_management_system;
 
@@ -17,13 +18,30 @@ class Program
         IVehicleRepository vehiclesRepository = new VehicleRepository(vehiclesCsvPath);
         
         var requestService = new RequestService(vehiclesRepository, driversRepository);
-       
-        var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);
-        var processedRequest_2 = requestService.ProcessRequest(1, 1, 22);
 
-        Console.WriteLine($"The total cost of your transportation will be {processedRequest_1.TotalCost}");
-        Console.WriteLine($"The total cost of your transportation will be {processedRequest_2.TotalCost}");
+        try
+        {
+            var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);
+            Console.WriteLine($"The total cost of your transportation will be {processedRequest_1.TotalCost}");
+        }
+        catch (DriverUnavailableException)
+        {
+            Console.WriteLine("1 Skipped");
+        }
+        try
+        {
+            var processedRequest_2 = requestService.ProcessRequest(1, 1, 22);
+            Console.WriteLine($"The total cost of your transportation will be {processedRequest_2.TotalCost}");
+        }
+        catch (DriverUnavailableException)
+        {
+            Console.WriteLine("2 Skipped");
+        }
+
         
+        
+        
+       
 
         // var allDrivers = driversRepo.GetAll();
         // Console.WriteLine("All drivers:");
