@@ -1,9 +1,7 @@
-using Applications.Services;
-using Domain.Entities;
-using transport_management_system.Domain.Entities;
-using Domain.Interfaces;
-using Infrastructure.Repositories;
-using transport_management_system.Domain.Exceptions;
+using transport_management_system.Applications.Services;
+using transport_management_system.Applications.Decorators;
+using transport_management_system.Domain.Interfaces;
+using transport_management_system.Infrastructure.Repositories;
 
 namespace transport_management_system;
 
@@ -16,32 +14,17 @@ class Program
         
         IDriverRepository driversRepository = new DriverRepository(driversCsvPath);
         IVehicleRepository vehiclesRepository = new VehicleRepository(vehiclesCsvPath);
-        
-        var requestService = new RequestService(vehiclesRepository, driversRepository);
 
-        try
-        {
-            var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);
-            Console.WriteLine($"The total cost of your transportation will be {processedRequest_1.TotalCost}");
-        }
-        catch (DriverUnavailableException)
-        {
-            Console.WriteLine("1 Skipped");
-        }
-        try
-        {
-            var processedRequest_2 = requestService.ProcessRequest(1, 1, 22);
-            Console.WriteLine($"The total cost of your transportation will be {processedRequest_2.TotalCost}");
-        }
-        catch (DriverUnavailableException)
-        {
-            Console.WriteLine("2 Skipped");
-        }
+        IRequestService preRequestService = new RequestService(vehiclesRepository, driversRepository);
+        IRequestService requestService = new RequestServiceExceptionHandlerDecorator(preRequestService);
 
-        
-        
-        
-       
+        var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);
+        // Console.WriteLine($"The total cost of your transportation will be {processedRequest_1.TotalCost}");
+
+        var processedRequest_2 = requestService.ProcessRequest(1, 1, 22);
+        // Console.WriteLine($"The total cost of your transportation will be {processedRequest_2.TotalCost}");
+     
+               
 
         // var allDrivers = driversRepo.GetAll();
         // Console.WriteLine("All drivers:");

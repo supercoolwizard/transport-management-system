@@ -1,9 +1,8 @@
 using transport_management_system.Domain.Entities;
-using transport_management_system.Domain;
-using Domain.Interfaces;
+using transport_management_system.Domain.Interfaces;
 using transport_management_system.Domain.Exceptions;
 
-namespace Infrastructure.Repositories;
+namespace transport_management_system.Infrastructure.Repositories;
 
 public class DriverRepository : IDriverRepository
 {

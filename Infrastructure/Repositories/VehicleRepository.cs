@@ -1,7 +1,7 @@
 using transport_management_system.Domain.Entities;
-using Domain.Interfaces;
+using transport_management_system.Domain.Interfaces;
 
-namespace Infrastructure.Repositories;
+namespace transport_management_system.Infrastructure.Repositories;
 
 public class VehicleRepository : IVehicleRepository
 {

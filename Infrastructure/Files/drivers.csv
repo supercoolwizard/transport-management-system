@@ -1,6 +1,6 @@
 driver_id,name,salary_per_km, availability,
-1,Ivan Petrenko,0.45, 1
-2,Oleksandr Koval,0.50, 1
-3,Maksym Bondarenko,0.55, 1
-4,Andriy Shevchuk,0.60, 1
-5,Yurii Melnyk,0.48, 1
+1,Ivan Petrenko,0.45,1
+2,Oleksandr Koval,0.50,1
+3,Maksym Bondarenko,0.55,1
+4,Andriy Shevchuk,0.60,1
+5,Yurii Melnyk,0.48,1

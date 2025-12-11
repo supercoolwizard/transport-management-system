@@ -1,10 +1,5 @@
 
-using System.Runtime.InteropServices;
-using Infrastructure.Repositories;
-using transport_management_system.Domain.Entities;
-using transport_management_system.Domain;
-
-namespace Domain.Entities;
+namespace transport_management_system.Domain.Entities;
 
 public class Request
 {

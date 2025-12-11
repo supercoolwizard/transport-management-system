@@ -1,6 +1,6 @@
 using transport_management_system.Domain.Entities;
 
-namespace Domain.Interfaces;
+namespace transport_management_system.Domain.Interfaces;
 
 public interface IVehicleRepository
 {
