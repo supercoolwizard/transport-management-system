@@ -18,12 +18,19 @@ public class RequestService : IRequestService
     public Request ProcessRequest(int vehicleId, int driverId, decimal distance) 
     {
         var driver = _driverRepository.GetById(driverId);
+        var vehicle = _vehicleRepository.GetById(vehicleId);
 
         if (driver == null)
         {
             throw new DriverNotFoundExcpetion(driverId);
         }
         driver.CheckAvailability();
+
+        if (vehicle == null)
+        {
+            throw new VehicleNotFoundExcpetion(vehicleId);
+        }
+        vehicle.CheckAvailability();
 
         var request = new Request(vehicleId, driverId, distance);
 
@@ -40,6 +47,7 @@ public class RequestService : IRequestService
 
         request.SetTotalCost(totalCost);
         _driverRepository.ChangeAvailabilityToZeroById(driverId);
+        _vehicleRepository.ChangeAvailabilityToZeroById(vehicleId);
 
         return request;
     }

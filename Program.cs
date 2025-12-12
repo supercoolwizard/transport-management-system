@@ -18,13 +18,10 @@ class Program
         IRequestService preRequestService = new RequestService(vehiclesRepository, driversRepository);
         IRequestService requestService = new RequestServiceExceptionHandlerDecorator(preRequestService);
 
-        var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);
-        // Console.WriteLine($"The total cost of your transportation will be {processedRequest_1.TotalCost}");
+        var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);  // (vehicleId, driverId, distance)
+        var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
+        var processedRequest_3 = requestService.ProcessRequest(1, 3, 23);  // vehicle unavailable
 
-        var processedRequest_2 = requestService.ProcessRequest(1, 1, 22);
-        // Console.WriteLine($"The total cost of your transportation will be {processedRequest_2.TotalCost}");
-     
-               
 
         // var allDrivers = driversRepo.GetAll();
         // Console.WriteLine("All drivers:");

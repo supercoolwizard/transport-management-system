@@ -7,4 +7,5 @@ public interface IVehicleRepository
     IEnumerable<Vehicle> GetAll();
     Vehicle? GetById(int id);
     decimal? GetCostPerKmById(int id);
+    void ChangeAvailabilityToZeroById(int id);
 }

@@ -27,10 +27,17 @@ public class RequestServiceExceptionHandlerDecorator : IRequestService
         {
             Console.WriteLine($"LOG: Driver unavailable. Error: {ex.Message}");
         }
+        catch (VehicleNotFoundExcpetion ex)
+        {
+            Console.WriteLine($"LOG: Vehicle not found for ID {ex.VehicleId}. Error: {ex.Message}");
+        }
+        catch (VehicleUnavailableException ex)
+        {
+            Console.WriteLine($"LOG: Vehicle unavailable. Error: {ex.Message}");
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"FATAL LOG: An unexpected error occurred: {ex.Message}");
-            // throw new ApplicationException("An internal error occurred during request processing.", ex);
         }
         return new Request(vehicleId, driverId, distance)
         {
