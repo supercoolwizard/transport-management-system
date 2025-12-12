@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 using transport_management_system.Applications.Services;
 using transport_management_system.Applications.Decorators;
 using transport_management_system.Domain.Interfaces;
@@ -22,19 +24,31 @@ class Program
         var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
         var processedRequest_3 = requestService.ProcessRequest(1, 3, 23);  // vehicle unavailable
 
+        string pythonExe = "python3";
+        string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Python", "distance_calculator.py");
 
-        // var allDrivers = driversRepo.GetAll();
-        // Console.WriteLine("All drivers:");
-        // foreach (var driver in allDrivers)
-        // {
-        //     Console.WriteLine($"{driver.DriverId} - {driver.Name} - {driver.SalaryPerKm}");
-        // }
+        string city1 = "Kyiv";
+        string city2 = "Dnipro";
 
-        // var allVehicles = vehiclesRepo.GetAll();
-        // Console.WriteLine("All vehicles:");
-        // foreach (var vehicle in allVehicles)
-        // {
-        //     Console.WriteLine($"{vehicle.DriverId} - {vehicle.Name} - {vehicle.SalaryPerKm}");
-        // }
+        var psi = new ProcessStartInfo
+        {
+            FileName = pythonExe,
+            Arguments = $"{scriptPath} {city1} {city2}",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using var process = Process.Start(psi);
+        string output = process!.StandardOutput.ReadToEnd();
+        string error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+
+        if (!string.IsNullOrWhiteSpace(error))
+            Console.WriteLine("Python error: " + error);
+        else
+            Console.WriteLine("Python output: " + output);
+
     }
 }
