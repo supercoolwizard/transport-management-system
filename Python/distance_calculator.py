@@ -17,7 +17,7 @@ class DistanceCalculator:
         self.distance = self.distance_calculator(self.city1, self.city2)
     
     def city_to_longitude(self, city1, city2):
-        geolocator = Nominatim(user_agent="MyApp")
+        geolocator = Nominatim(user_agent="TransportManagementSystem/1.0 (contact: support@myapp.local)")
 
         location_city1 = geolocator.geocode(city1, addressdetails=True, country_codes="UA")
         location_city2 = geolocator.geocode(city2, addressdetails=True, country_codes="UA")
