@@ -23,6 +23,7 @@ class Program
         IRequestService requestService = new RequestServiceExceptionHandlerDecorator(preRequestService);
 
         IDistanceService distanceService = new PythonDistanceService();
+        distanceService = new PythonDistanceServiceExceptionHandlerDecorator(distanceService);
 
         // var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);  // (vehicleId, driverId, distance)
         // var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
