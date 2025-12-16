@@ -42,7 +42,7 @@ public class RequestService : IRequestService
         if (costPerKm.HasValue && salaryPerKm.HasValue)
         {
             totalCost = request.Distance * costPerKm.Value + request.Distance * salaryPerKm.Value;
-            Console.WriteLine($"Total cost: {totalCost:C}");
+            Console.WriteLine($"Total cost of transportation will be: {totalCost:C}, your driver will be {driver.Name} on {vehicle.Name}");
         }
 
         request.SetTotalCost(totalCost);

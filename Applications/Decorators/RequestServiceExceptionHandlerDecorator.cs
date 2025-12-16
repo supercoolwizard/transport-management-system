@@ -35,6 +35,15 @@ public class RequestServiceExceptionHandlerDecorator : IRequestService
         {
             Console.WriteLine($"LOG: Vehicle unavailable. Error: {ex.Message}");
         }
+        catch (NoAvailableDriversException ex)
+        {
+            Console.WriteLine($"LOG: {ex.Message}");
+        }
+        catch (NoAvailableVehiclesException ex)
+        {
+            Console.WriteLine($"LOG: {ex.Message}");
+        }
+        
         catch (Exception ex)
         {
             Console.WriteLine($"FATAL LOG: An unexpected error occurred: {ex.Message}");

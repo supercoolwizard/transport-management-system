@@ -1,5 +1,7 @@
 using System.Diagnostics;
 
+
+using transport_management_system.Applications.Strategies;
 using transport_management_system.Applications.Services;
 using transport_management_system.Applications.Decorators;
 using transport_management_system.Domain.Interfaces;
@@ -20,37 +22,23 @@ class Program
         IRequestService preRequestService = new RequestService(vehiclesRepository, driversRepository);
         IRequestService requestService = new RequestServiceExceptionHandlerDecorator(preRequestService);
 
-        var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);  // (vehicleId, driverId, distance)
-        var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
-        var processedRequest_3 = requestService.ProcessRequest(1, 3, 23);  // vehicle unavailable
+        IDistanceService distanceService = new PythonDistanceService();
 
-        string pythonExe = "python3";
-        string scriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Python", "distance_calculator.py");
+        // var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);  // (vehicleId, driverId, distance)
+        // var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
+        // var processedRequest_3 = requestService.ProcessRequest(1, 3, 23);  // vehicle unavailable
 
-        string city1 = "Kyiv";
-        string city2 = "Dnipro";
+        var strategy = new CheapestRequestStrategy();
 
-        var psi = new ProcessStartInfo
-        {
-            FileName = pythonExe,
-            Arguments = $"{scriptPath} {city1} {city2}",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var facade = new RequestFacade(
+            driversRepository,
+            vehiclesRepository,
+            distanceService,
+            strategy
+        );
 
-        using var process = Process.Start(psi);
-        string output = process!.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-
-        if (!string.IsNullOrWhiteSpace(error))
-            Console.WriteLine("Python error: " + error);
-        else
-            Console.WriteLine("Python output: " + output);
-
-
+        var request = facade.CreateRequest("Kyiv", "Lviv");
+        var processedRequest_4 = requestService.ProcessRequest(request.VehicleId, request.DriverId, request.Distance);
 
     }
 }
