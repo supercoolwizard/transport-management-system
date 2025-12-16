@@ -1,6 +1,7 @@
 using System.Diagnostics;
 
 using transport_management_system.Domain.Interfaces;
+using transport_management_system.Domain.Exceptions;
 
 namespace transport_management_system.Applications.Services;
 
@@ -20,14 +21,25 @@ public class PythonDistanceService : IDistanceService
 
         using var process = Process.Start(psi);
 
-        string output = process!.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
+        string stdout = process!.StandardOutput.ReadToEnd();
+        string stderr = process.StandardError.ReadToEnd();
 
         process.WaitForExit();
 
-        if (!string.IsNullOrWhiteSpace(error))
-            throw new Exception(error);
+        if (process.ExitCode == 0)
+            return decimal.Parse(stdout.Trim());
+
+        if (process.ExitCode == 21 && stderr.StartsWith("CITY_NOT_FOUND|"))
+            throw new CityNotFoundException(stderr.Split('|', 2)[1]);
+        if (process.ExitCode == 22 && stderr.StartsWith("CITY_NOT_IN_UKRAINE|"))
+            throw new CityNotInUkraineException(stderr.Split('|', 2)[1]);
+
+        if (process.ExitCode == 30)
+            throw new TimeoutException("Geocoding service timeout");
+        if (process.ExitCode == 31)
+            throw new Exception("Geocoding service unavailable");
+
         
-        return decimal.Parse(output.Trim());
+        throw new Exception($"Python error: {stderr}");
     }
 }

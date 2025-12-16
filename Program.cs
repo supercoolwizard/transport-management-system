@@ -34,11 +34,13 @@ class Program
             driversRepository,
             vehiclesRepository,
             distanceService,
-            strategy
+            strategy,
+            requestService
         );
 
-        var request = facade.CreateRequest("Kyiv", "Lviv");
-        var processedRequest_4 = requestService.ProcessRequest(request.VehicleId, request.DriverId, request.Distance);
-
+        var processedRequestThroughFacade_1 = facade.CreateRequest("Kyiv", "Lviv");
+        var processedRequestThroughFacade_2 = facade.CreateRequest("Moscow", "Lviv");
+        // var processedRequestThroughFacade_3 = facade.CreateRequest("LLLLL", "Lviv");
+        // var processedRequestThroughFacade_4 = facade.CreateRequest("LLLLL", "Lviv");
     }
 }

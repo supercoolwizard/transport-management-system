@@ -3,24 +3,25 @@ import sys
 from geopy.distance import geodesic as GD
 from geopy.geocoders import Nominatim
 
-from exceptions import CityNotFoundException, CityNotInUkraineException, InvalidCityTypeException
+from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+from requests.exceptions import ReadTimeout, ConnectionError
+
+from exceptions import CityNotFoundException, CityNotInUkraineException
 
 class DistanceCalculator:
     def __init__(self, city1, city2):
-        if not isinstance(city1, str):
-            raise InvalidCityTypeException(f"city1 must be a string, got {type(city1).__name__}")
-        if not isinstance(city2, str):
-            raise InvalidCityTypeException(f"city2 must be a string, got {type(city2).__name__}")
-
         self.city1 = city1
         self.city2 = city2
         self.distance = self.distance_calculator(self.city1, self.city2)
     
     def city_to_longitude(self, city1, city2):
-        geolocator = Nominatim(user_agent="TransportManagementSystem/1.0 (contact: support@myapp.local)")
+        geolocator = Nominatim(
+            user_agent="TransportManagementSystem/1.0 (contact: support@myapp.local)",
+            timeout=10
+        )
 
-        location_city1 = geolocator.geocode(city1, addressdetails=True, country_codes="UA")
-        location_city2 = geolocator.geocode(city2, addressdetails=True, country_codes="UA")
+        location_city1 = geolocator.geocode(city1, addressdetails=True)
+        location_city2 = geolocator.geocode(city2, addressdetails=True)
 
         if not location_city1 or not location_city2:
             raise CityNotFoundException("One of the cities was not found")
@@ -45,9 +46,34 @@ class DistanceCalculator:
         return distance
 
 if __name__ == "__main__":
-    city1 = sys.argv[1]
-    city2 = sys.argv[2]
+    try:
+        city1 = sys.argv[1]
+        city2 = sys.argv[2]
 
-    distance_between_city1_city2 = DistanceCalculator(city1, city2)
-    
-    print(distance_between_city1_city2.distance)
+        distance = DistanceCalculator(city1, city2).distance
+        print(distance)
+        sys.exit(0)
+
+    except CityNotFoundException as e:
+        print(f"CITY_NOT_FOUND|{e}", file=sys.stderr)
+        sys.exit(21)
+
+    except CityNotInUkraineException as e:
+        print(f"CITY_NOT_IN_UKRAINE|{e}", file=sys.stderr)
+        sys.exit(22)
+
+
+
+    except (GeocoderTimedOut, ReadTimeout) as e:
+        print("GEOCODER_TIMEOUT|Geocoding service did not respond in time", file=sys.stderr)
+        sys.exit(30)
+
+    except (GeocoderServiceError, ConnectionError) as e:
+        print("GEOCODER_UNAVAILABLE|Geocoding service is unavailable", file=sys.stderr)
+        sys.exit(31)
+
+
+
+    except Exception as e:
+        print(f"UNKNOWN_ERROR|{e}", file=sys.stderr)
+        sys.exit(1)

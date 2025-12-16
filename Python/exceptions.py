@@ -1,7 +1,3 @@
-
-class InvalidCityTypeException(Exception):
-    pass
-
 class CityNotFoundException(Exception):
     pass
 

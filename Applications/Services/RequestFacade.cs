@@ -10,17 +10,20 @@ public class RequestFacade
     private readonly IVehicleRepository _vehicles;
     private readonly IDistanceService _distanceService;
     private readonly IRequestSelectionStrategy _strategy;
+    private readonly IRequestService _requestService;
 
     public RequestFacade(
         IDriverRepository drivers, 
         IVehicleRepository vehicles, 
         IDistanceService distanceService, 
-        IRequestSelectionStrategy strategy)
+        IRequestSelectionStrategy strategy,
+        IRequestService requestService)
     {
         _drivers = drivers ?? throw new ArgumentException(nameof(drivers));
         _vehicles = vehicles ?? throw new ArgumentException(nameof(vehicles));
         _distanceService = distanceService ?? throw new ArgumentException(nameof(distanceService));
         _strategy = strategy ?? throw new ArgumentException(nameof(strategy));
+        _requestService = requestService ?? throw new ArgumentException(nameof(requestService));
     }
 
     public Request CreateRequest(string from, string to)
@@ -32,10 +35,6 @@ public class RequestFacade
         
         var (driver, vehicle) = _strategy.Select(drivers, vehicles);
 
-        return new(
-            vehicle.VehicleId,
-            driver.DriverId,
-            distance
-        );
+        return _requestService.ProcessRequest(vehicle.VehicleId, driver.DriverId, distance);
     }
 }
