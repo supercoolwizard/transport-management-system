@@ -1,5 +1,5 @@
 using System.Diagnostics;
-
+using Microsoft.Extensions.Logging;
 
 using transport_management_system.Applications.Strategies;
 using transport_management_system.Applications.Services;
@@ -13,17 +13,32 @@ class Program
 {
     static void Main(string[] args)
     {
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .SetMinimumLevel(LogLevel.Information)
+                .AddConsole();
+        });
+
+        ILogger logger = loggerFactory.CreateLogger("App");
+        
         string driversCsvPath = "Infrastructure/Files/drivers.csv";
         string vehiclesCsvPath = "Infrastructure/Files/vehicles.csv";    
         
         IDriverRepository driversRepository = new DriverRepository(driversCsvPath);
         IVehicleRepository vehiclesRepository = new VehicleRepository(vehiclesCsvPath);
+        
+        var requestServiceLogger = loggerFactory.CreateLogger<RequestServiceExceptionHandlerDecorator>();
 
         IRequestService preRequestService = new RequestService(vehiclesRepository, driversRepository);
-        IRequestService requestService = new RequestServiceExceptionHandlerDecorator(preRequestService);
+        IRequestService requestService = new RequestServiceExceptionHandlerDecorator(preRequestService, requestServiceLogger);
+
 
         IDistanceService distanceService = new PythonDistanceService();
-        distanceService = new PythonDistanceServiceExceptionHandlerDecorator(distanceService);
+
+        var distanceLogger = loggerFactory.CreateLogger<PythonDistanceServiceExceptionHandlerDecorator>();
+
+        distanceService = new PythonDistanceServiceExceptionHandlerDecorator(distanceService, distanceLogger);
 
         // var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);  // (vehicleId, driverId, distance)
         // var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
@@ -40,7 +55,7 @@ class Program
         );
 
         var processedRequestThroughFacade_1 = facade.CreateRequest("Kyiv", "Lviv");
-        var processedRequestThroughFacade_2 = facade.CreateRequest("Moscow", "Lviv");
+        var processedRequestThroughFacade_2 = facade.CreateRequest("London", "Lviv");
         // var processedRequestThroughFacade_3 = facade.CreateRequest("LLLLL", "Lviv");
         // var processedRequestThroughFacade_4 = facade.CreateRequest("LLLLL", "Lviv");
     }

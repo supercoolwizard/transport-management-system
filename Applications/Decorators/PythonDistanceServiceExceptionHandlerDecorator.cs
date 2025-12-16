@@ -1,40 +1,58 @@
+using Microsoft.Extensions.Logging;
 using transport_management_system.Domain.Exceptions;
 using transport_management_system.Domain.Interfaces;
 
-namespace transport_management_system.Applications.Decorators
+namespace transport_management_system.Applications.Decorators;
+public class PythonDistanceServiceExceptionHandlerDecorator : IDistanceService
 {
-    public class PythonDistanceServiceExceptionHandlerDecorator : IDistanceService
+    private readonly IDistanceService _inner;
+    private readonly ILogger<PythonDistanceServiceExceptionHandlerDecorator> _logger;
+
+    public PythonDistanceServiceExceptionHandlerDecorator(
+        IDistanceService inner, 
+        ILogger<PythonDistanceServiceExceptionHandlerDecorator> logger)
     {
-        private readonly IDistanceService _inner;
+        _inner = inner;
+        _logger = logger;
+    }
 
-        public PythonDistanceServiceExceptionHandlerDecorator(IDistanceService inner)
+    public decimal CalculateDistance(string from, string to)
+    {
+        try
         {
-            _inner = inner;
+            _logger.LogInformation(
+                "Calculating distance between {from} and {to}",
+                from, to
+            );
+
+            return _inner.CalculateDistance(from, to);
         }
-
-        public decimal CalculateDistance(string from, string to)
+        catch (CityNotFoundException ex)
         {
-            try
-            {
-                return _inner.CalculateDistance(from, to);
-            }
-            catch (CityNotFoundException e)
-            {
-                Console.WriteLine($"Input error: {e.Message}");
-                throw;
-            }
-            catch (CityNotInUkraineException e)
-            {
-                Console.WriteLine($"Invalid region: {e.Message}");
-                throw;
-            }
-            catch (TimeoutException e)
-            {
-                Console.WriteLine($"Geocoding service unavailable: {e.Message}");
-                throw;
-            }
-
-            throw new InvalidOperationException("Unreachable code");
+            _logger.LogWarning(
+                ex,
+                "City not found: {from} or {to}",
+                from, to
+            );
+            throw;
+        }
+        catch (CityNotInUkraineException ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "City not found in Ukraine: {from} or {to}",
+                from, to
+            );
+            throw;
+        }
+        catch (TimeoutException ex)
+        {
+            _logger.LogError(
+                ex,
+                "Geocoding service timeout for {from} or {to}",
+                from, to
+            );
+            throw;
         }
     }
 }
