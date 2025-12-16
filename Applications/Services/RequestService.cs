@@ -1,3 +1,4 @@
+using transport_management_system.Applications.DTOs;
 using transport_management_system.Domain.Entities;
 using transport_management_system.Domain.Exceptions;
 using transport_management_system.Domain.Interfaces;
@@ -17,35 +18,19 @@ public class RequestService : IRequestService
 
     public Request ProcessRequest(int vehicleId, int driverId, decimal distance) 
     {
-        var driver = _driverRepository.GetById(driverId);
-        var vehicle = _vehicleRepository.GetById(vehicleId);
-
-        if (driver == null)
-        {
-            throw new DriverNotFoundExcpetion(driverId);
-        }
+        var driver = _driverRepository.GetById(driverId) ?? throw new DriverNotFoundExcpetion(driverId);
         driver.CheckAvailability();
-
-        if (vehicle == null)
-        {
-            throw new VehicleNotFoundExcpetion(vehicleId);
-        }
+        
+        var vehicle = _vehicleRepository.GetById(vehicleId) ?? throw new VehicleNotFoundExcpetion(vehicleId);
         vehicle.CheckAvailability();
 
         var request = new Request(vehicleId, driverId, distance);
 
-        decimal? costPerKm = _vehicleRepository.GetCostPerKmById(vehicleId);
-        decimal? salaryPerKm = _driverRepository.GetSalaryPerKmById(driverId);
+        decimal costPerKm = _vehicleRepository.GetCostPerKmById(vehicleId) ?? 0;
+        decimal salaryPerKm = _driverRepository.GetSalaryPerKmById(driverId) ?? 0;
 
-        decimal totalCost = 0;
+        request.SetTotalCost(distance * (costPerKm + salaryPerKm));
 
-        if (costPerKm.HasValue && salaryPerKm.HasValue)
-        {
-            totalCost = request.Distance * costPerKm.Value + request.Distance * salaryPerKm.Value;
-            Console.WriteLine($"Total cost of transportation will be: {totalCost:C}, your driver will be {driver.Name} on {vehicle.Name}");
-        }
-
-        request.SetTotalCost(totalCost);
         _driverRepository.ChangeAvailabilityToZeroById(driverId);
         _vehicleRepository.ChangeAvailabilityToZeroById(vehicleId);
 

@@ -55,8 +55,9 @@ class Program
         );
 
         var processedRequestThroughFacade_1 = facade.CreateRequest("Kyiv", "Lviv");
+        Console.WriteLine($"Total cost: {processedRequestThroughFacade_1.TotalCost:C}, Driver: {processedRequestThroughFacade_1.DriverName}, Vehicle: {processedRequestThroughFacade_1.VehicleName}");
         var processedRequestThroughFacade_2 = facade.CreateRequest("London", "Lviv");
-        // var processedRequestThroughFacade_3 = facade.CreateRequest("LLLLL", "Lviv");
-        // var processedRequestThroughFacade_4 = facade.CreateRequest("LLLLL", "Lviv");
+        Console.WriteLine($"Total cost: {processedRequestThroughFacade_2.TotalCost:C}, Driver: {processedRequestThroughFacade_2.DriverName}, Vehicle: {processedRequestThroughFacade_2.VehicleName}");
+
     }
 }

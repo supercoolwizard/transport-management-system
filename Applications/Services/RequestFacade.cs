@@ -1,6 +1,7 @@
 using transport_management_system.Applications.Strategies;
 using transport_management_system.Domain.Entities;
 using transport_management_system.Domain.Interfaces;
+using transport_management_system.Applications.DTOs;
 
 namespace transport_management_system.Applications.Services;
 
@@ -26,7 +27,7 @@ public class RequestFacade
         _requestService = requestService ?? throw new ArgumentException(nameof(requestService));
     }
 
-    public Request CreateRequest(string from, string to)
+    public RequestResultDto CreateRequest(string from, string to)
     {
         var distance = _distanceService.CalculateDistance(from, to);
 
@@ -35,6 +36,14 @@ public class RequestFacade
         
         var (driver, vehicle) = _strategy.Select(drivers, vehicles);
 
-        return _requestService.ProcessRequest(vehicle.VehicleId, driver.DriverId, distance);
+        var request = _requestService.ProcessRequest(vehicle.VehicleId, driver.DriverId, distance);
+
+        return new RequestResultDto
+        {
+            DistanceKm = distance,
+            TotalCost = request.TotalCost,
+            DriverName = driver.Name,
+            VehicleName = vehicle.Name
+        };
     }
 }
