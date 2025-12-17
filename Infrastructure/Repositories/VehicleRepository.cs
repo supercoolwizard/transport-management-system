@@ -22,7 +22,8 @@ public class VehicleRepository : IVehicleRepository
                 int.Parse(cols[0]),
                 cols[1],
                 decimal.Parse(cols[2]),
-                int.Parse(cols[3])
+                decimal.Parse(cols[3]),
+                int.Parse(cols[4])
             ));
     }
 
@@ -31,10 +32,15 @@ public class VehicleRepository : IVehicleRepository
         return GetAll().FirstOrDefault(d => d.VehicleId == id);
     }
 
+    public decimal? GetMaxSpeedById(int id)
+    {
+        Vehicle? vehicle = GetById(id);
+        return vehicle?.MaxSpeed;
+    }
+
     public decimal? GetCostPerKmById(int id)
     {
         Vehicle? vehicle = GetById(id);
-
         return vehicle?.CostPerKm; 
     }
 
@@ -47,7 +53,7 @@ public class VehicleRepository : IVehicleRepository
             var cols = lines[i].Split(',');
             if (int.Parse(cols[0]) == id)
             {
-                cols[3] = "0";
+                cols[4] = "0";
                 lines[i] = string.Join(",", cols);
 
                 File.WriteAllLines(_filePath, lines);

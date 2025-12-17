@@ -44,7 +44,11 @@ class Program
         // var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
         // var processedRequest_3 = requestService.ProcessRequest(1, 3, 23);  // vehicle unavailable
 
-        var strategy = new CheapestRequestStrategy();
+        var strategyLogger = loggerFactory.CreateLogger<RequestSelectionStrategyExceptionHandlerDecorator>();
+        IRequestSelectionStrategy strategy = new RequestSelectionStrategyExceptionHandlerDecorator(
+            new CheapestRequestStrategy(),
+            strategyLogger
+        );
 
         var facade = new RequestFacade(
             driversRepository,
@@ -56,8 +60,8 @@ class Program
 
         var processedRequestThroughFacade_1 = facade.CreateRequest("Kyiv", "Lviv");
         Console.WriteLine($"Total cost: {processedRequestThroughFacade_1.TotalCost:C}, Driver: {processedRequestThroughFacade_1.DriverName}, Vehicle: {processedRequestThroughFacade_1.VehicleName}");
-        var processedRequestThroughFacade_2 = facade.CreateRequest("London", "Lviv");
-        Console.WriteLine($"Total cost: {processedRequestThroughFacade_2.TotalCost:C}, Driver: {processedRequestThroughFacade_2.DriverName}, Vehicle: {processedRequestThroughFacade_2.VehicleName}");
+        // var processedRequestThroughFacade_2 = facade.CreateRequest("London", "Lviv");
+        // Console.WriteLine($"Total cost: {processedRequestThroughFacade_2.TotalCost:C}, Driver: {processedRequestThroughFacade_2.DriverName}, Vehicle: {processedRequestThroughFacade_2.VehicleName}");
 
     }
 }

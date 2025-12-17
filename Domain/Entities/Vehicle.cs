@@ -8,10 +8,11 @@ public class Vehicle
 {
     public int VehicleId { get; }
     public string Name { get; }
+    public decimal MaxSpeed { get; } 
     public decimal CostPerKm { get; }
     public int Availability { get;}
 
-    public Vehicle(int vehicleId, string name, decimal costPerKm, int availability)
+    public Vehicle(int vehicleId, string name, decimal maxSpeed, decimal costPerKm, int availability)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Vehicle name cannot be empty.", nameof(name));
@@ -21,6 +22,7 @@ public class Vehicle
         
         VehicleId = vehicleId;
         Name = name;
+        MaxSpeed = maxSpeed;
         CostPerKm = costPerKm;
         Availability = availability;
     }

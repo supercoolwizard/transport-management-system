@@ -54,5 +54,13 @@ public class PythonDistanceServiceExceptionHandlerDecorator : IDistanceService
             );
             throw;
         }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(
+                ex,
+                "Python environment failure while calculating distance"
+            );
+            throw;
+        }
     }
 }

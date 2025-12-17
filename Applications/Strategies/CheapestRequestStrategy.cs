@@ -13,7 +13,7 @@ public class CheapestRequestStrategy : IRequestSelectionStrategy
             throw new NoAvailableDriversException("No available drivers.");
 
         var availableVehicles = vehicles.Where(d => d.Availability == 1);
-        if (!availableDrivers.Any())
+        if (!availableVehicles.Any())
             throw new NoAvailableVehiclesException("No available vehicles.");
 
         var driver = availableDrivers
