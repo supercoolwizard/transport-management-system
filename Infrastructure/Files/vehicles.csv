@@ -1,4 +1,4 @@
-vehicle_id,name,max_speed_in_km_per_hour,cost_per_km,availability
+vehicle_id,name,max_speed_in_km_per_hour,cost_per_km_in_usd,availability
 1,Mercedes Sprinter,140,0.70,1
 2,MAN TGL 7.5t,120,1.10,1
 3,Iveco Daily Van,135,0.65,1

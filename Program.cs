@@ -7,6 +7,7 @@ using transport_management_system.Applications.Services;
 using transport_management_system.Applications.Decorators;
 using transport_management_system.Domain.Interfaces;
 using transport_management_system.Infrastructure.Repositories;
+using transport_management_system.UI;
 
 namespace transport_management_system;
 
@@ -41,10 +42,6 @@ class Program
 
         distanceService = new PythonDistanceServiceExceptionHandlerDecorator(distanceService, distanceLogger);
 
-        // var processedRequest_1 = requestService.ProcessRequest(1, 1, 12);  // (vehicleId, driverId, distance)
-        // var processedRequest_2 = requestService.ProcessRequest(2, 1, 22);  // driver unavailable
-        // var processedRequest_3 = requestService.ProcessRequest(1, 3, 23);  // vehicle unavailable
-
         var strategyLogger = loggerFactory.CreateLogger<RequestSelectionStrategyExceptionHandlerDecorator>();
         IRequestSelectionStrategy strategy = new RequestSelectionStrategyExceptionHandlerDecorator(
             new CheapestRequestStrategy(),
@@ -59,10 +56,7 @@ class Program
             requestService
         );
 
-        var processedRequestThroughFacade_1 = facade.CreateRequest("Kyiv", "Lviv");
-        Console.WriteLine($"Total cost: {processedRequestThroughFacade_1.TotalCost:C}, Driver: {processedRequestThroughFacade_1.DriverName}, Vehicle: {processedRequestThroughFacade_1.VehicleName}");
-        // var processedRequestThroughFacade_2 = facade.CreateRequest("London", "Lviv");
-        // Console.WriteLine($"Total cost: {processedRequestThroughFacade_2.TotalCost:C}, Driver: {processedRequestThroughFacade_2.DriverName}, Vehicle: {processedRequestThroughFacade_2.VehicleName}");
-
+        var cli = new RequestCli(facade);
+        cli.Run();
     }
 }
