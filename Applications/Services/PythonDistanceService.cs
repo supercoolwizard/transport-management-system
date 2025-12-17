@@ -11,7 +11,7 @@ public class PythonDistanceService : IDistanceService
     {
         var psi = new ProcessStartInfo
         {
-            FileName = "python3",
+            FileName = "./venv/bin/python",
             Arguments = $"Python/distance_calculator.py \"{from}\" \"{to}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,

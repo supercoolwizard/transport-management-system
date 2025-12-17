@@ -1,0 +1,22 @@
+# .NET build outputs
+bin/
+obj/
+
+# Python cache and virtual environments
+**/__pycache__/
+**/*.pyc
+Python/venv/
+
+# IDE/editor settings
+.vscode/
+*.user
+*.suo
+*.idea/
+
+# Git
+.git/
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
