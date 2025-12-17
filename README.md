@@ -5,7 +5,7 @@ A command-line interface (CLI) application to manage transport requests using .N
 * Calculate distances using a Python geolocation service `Nominatim`
 * Calculate total cost of your transportation
 
-Getting Started
+## Getting Started
 1. Clone the repository
   ```bash
   git clone https://github.com/yourusername/transport_management_system.git
@@ -24,8 +24,7 @@ Getting Started
   docker run -it tms-cli
   ```
 
-How it works
-
+## How it works
 1. Start the CLI
 2. Select **“Post a request”** or **“Exit”**
 3. Enter **origin** and **destination** cities
