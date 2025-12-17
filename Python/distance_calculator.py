@@ -20,24 +20,25 @@ class DistanceCalculator:
             timeout=10
         )
 
-        location_city1 = geolocator.geocode(city1, addressdetails=True)
-        location_city2 = geolocator.geocode(city2, addressdetails=True)
+        def resolve_city(city):
+            location = geolocator.geocode(city, addressdetails=True)
 
-        if not location_city1 or not location_city2:
-            raise CityNotFoundException("One of the cities was not found")
+            if not location:
+                raise CityNotFoundException(f"{city} was not found")
+
+            address = location.raw.get("address", {})
+
+            # Ensure it is actually a city/town/village
+            if not any(k in address for k in ("city", "town", "village")):
+                raise CityNotFoundException(f"{city} was not found")
+
+            country = address.get("country_code", "").upper()
+            if country != "UA":
+                raise CityNotInUkraineException(f"{city} exists but is not in Ukraine")
+
+            return (location.latitude, location.longitude)
         
-        country1 = location_city1.raw.get("address", {}).get("country_code", "").upper()
-        country2 = location_city2.raw.get("address", {}).get("country_code", "").upper()
-
-        if country1 != "UA":
-            raise CityNotInUkraineException(f"{city1} exists but is not in Ukraine")
-        if country2 != "UA":
-            raise CityNotInUkraineException(f"{city2} exists but is not in Ukraine")
-        
-        lat_long_city1 = (location_city1.latitude, location_city1.longitude)
-        lat_long_city2 = (location_city2.latitude, location_city2.longitude)
-
-        return lat_long_city1, lat_long_city2
+        return resolve_city(city1), resolve_city(city2)
     
     def distance_calculator(self, city1, city2):
         city1_coord, city2_coord = self.city_to_longitude(city1, city2)
